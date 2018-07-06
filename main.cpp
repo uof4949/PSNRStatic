@@ -263,6 +263,9 @@ int main(int argc, char *argv[])
   createFrame( &cOrgFrame, width, height );
   createFrame( &cRecFrame, width, height );
 
+  // Edit by JB
+  fprintf(stdout, "Y-PSNR\t\tU-PSNR\t\tV-PSNR\t\tTotal-PSNR\n");
+  fprintf(res_file, "Y-PSNR\t\tU-PSNR\t\tV-PSNR\t\tTotal-PSNR\n");
   //===== loop over frames =====
   for( skip = skip_at_start, index = 0; index < sequence_length; index++, skip = skip_between )
   {
@@ -279,9 +282,11 @@ int main(int argc, char *argv[])
     py = (int)floor( acc * psnrY + 0.5 );
     pu = (int)floor( acc * psnrU + 0.5 );
     pv = (int)floor( acc * psnrV + 0.5 );
-    fprintf(stdout,"%d\t"OUT"\t"OUT"\t"OUT"\n",index,py/acc,py%acc,pu/acc,pu%acc,pv/acc,pv%acc);
+	// Original
+	// fprintf(stdout, "%d\t"OUT"\t"OUT"\t"OUT"\n", index, py / acc, py%acc, pu / acc, pu%acc, pv / acc, pv%acc);
 	// Edit by JB
-	fprintf(res_file, "%d\t%d.%04d\t%d.%04d\t%d.%04d\n", index, py / acc, py%acc, pu / acc, pu%acc, pv / acc, pv%acc);
+	fprintf(stdout, "%d\t"OUT"\t"OUT"\t"OUT"\t"OUT"\n", index, py / acc, py%acc, pu / acc, pu%acc, pv / acc, pv%acc, (py + pu + pv) / (acc * 3), (py + pu + pv) % (acc * 3));
+	fprintf(res_file, "%d\t%d.%04d\t%d.%04d\t%d.%04d\t%d.%04d\n", index, py / acc, py%acc, pu / acc, pu%acc, pv / acc, pv%acc, (py + pu + pv) / (acc * 3), (py + pu + pv) % (acc * 3));
   }
   fprintf(stdout,"\n");
 
@@ -307,7 +312,7 @@ int main(int argc, char *argv[])
     fprintf(stderr,"total\t"OUT"\t"OUT"\t"OUT"\n",py/acc,py%acc,pu/acc,pu%acc,pv/acc,pv%acc);
     fprintf(stdout,"total\t"OUT"\t"OUT"\t"OUT"\n",py/acc,py%acc,pu/acc,pu%acc,pv/acc,pv%acc);
 	// Edit by JB
-	fprintf(res_file, "total\t%d.%04d\t%d.%04d\t%d.%04d", py / acc, py%acc, pu / acc, pu%acc, pv / acc, pv%acc);
+	fprintf(res_file, "total\t%d.%04d\t%d.%04d\t%d.%04d\t%d.%04d", py / acc, py%acc, pu / acc, pu%acc, pv / acc, pv%acc, (py + pu + pv) / (acc * 3), (py + pu + pv) % (acc * 3));
   }
 
   fprintf(stdout, "\n");
